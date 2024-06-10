@@ -53,6 +53,7 @@
 #include "lib/encrypt.h"
 #include "lib/wireguard.h"
 #include "lib/vxlan.h"
+#include "lib/lookup_ipip.h"
 
 /* Bit 0 is skipped for robustness, as it's used in some places to indicate from_host itself. */
 #define FROM_HOST_FLAG_NEED_HOSTFW (1 << 1)
@@ -1310,6 +1311,13 @@ int cil_from_netdev(struct __ctx_buff *ctx)
 	if (ret == CTX_ACT_REDIRECT)
 		return ret;
 #endif /* ENABLE_HIGH_SCALE_IPCACHE */
+
+#ifdef ENABLE_IPIP_TERMINATION
+	ret = decap_ipip(ctx);
+	if (IS_ERR(ret)) {
+		goto drop_err;
+	}
+#endif
 
 	return handle_netdev(ctx, false);
 
