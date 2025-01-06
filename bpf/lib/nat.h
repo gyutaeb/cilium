@@ -23,6 +23,8 @@
 #include "stubs.h"
 #include "trace.h"
 
+//empty-test
+
 enum  nat_dir {
 	NAT_DIR_EGRESS  = TUPLE_F_OUT,
 	NAT_DIR_INGRESS = TUPLE_F_IN,
